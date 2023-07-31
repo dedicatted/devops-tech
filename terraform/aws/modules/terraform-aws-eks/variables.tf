@@ -6,9 +6,12 @@ variable "name" {
   default = "devops"
 }
 variable "vpc_id" {
+  description = "default vpc us-east-1"
+  default = "vpc-0f5e6ce17bb4dd77d"
 }
 variable "private_subnets" {
-default     = ["subnet-07d95e0b059c97b9a", "subnet-01750b5875e3df47d", "subnet-009315aa49ef29e26"]
+  description = "There are default PUBLIC subnets just to test the deployment"
+  default     = ["subnet-07d95e0b059c97b9a", "subnet-01750b5875e3df47d", "subnet-009315aa49ef29e26"]
 }
 variable "cluster_version" {
   default = "1.27"

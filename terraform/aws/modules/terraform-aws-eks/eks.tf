@@ -68,7 +68,7 @@ module "eks" {
       # scripts/configuration changes after the bootstrap script has been run
     }
   }
-  
+
   manage_aws_auth_configmap = true
 
   # aws_auth_roles = [
@@ -80,8 +80,8 @@ module "eks" {
   # ]
   aws_auth_users = [
     {
-      userarn  = "arn:aws:iam::338096867149:user/danylo_safankov"
-      username = "danylo_safankov"
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/diligend_tf_admin"
+      username = "diligend_tf_admin"
       groups   = ["system:masters"]
     }
   ]

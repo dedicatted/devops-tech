@@ -1,9 +1,6 @@
 name: List Files
 
 on:
-  push:
-   branches:
-   - tf_modules
   workflow_dispatch:
 
 

@@ -2,6 +2,8 @@ name: List Files
 
 on:
   workflow_dispatch:
+    branches:
+      - tf-modules
 
 jobs:
   list-files:

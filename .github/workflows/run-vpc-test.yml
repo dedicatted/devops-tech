@@ -1,12 +1,11 @@
 name: List Files
 
 on:
+  push:
+   branches:
+   - tf_modules
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'The branch to run the test on'
-        required: true
-        default: 'tf-modules'  # Set the default value to tf-modules
+
 
 jobs:
   list-files:

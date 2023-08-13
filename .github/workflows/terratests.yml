@@ -32,7 +32,6 @@ jobs:
       - name: check tf version
         run: terraform version 
 
-      Runs a set of commands using the runners shell
       - name: terraform-aws-vpc
         run: |
           cd terraform/aws/modules/terraform-aws-vpc

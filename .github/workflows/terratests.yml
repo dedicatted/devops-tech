@@ -25,6 +25,13 @@ jobs:
           go mod tidy
           go test
       
+      - name: Testing terraform-aws-waf
+        run: |
+          cd terraform/aws/modules/terraform-aws-waf
+          go mod init "waf"
+          go mod tidy
+          go test
+      
       - name: Create GitHub issue on failure
         if: ${{ failure() }}
         env:

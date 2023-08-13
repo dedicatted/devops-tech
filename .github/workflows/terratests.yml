@@ -2,6 +2,8 @@ name: Terratests
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0' # Run every Sunday at midnight UTC
 
 jobs:
   build:
@@ -35,5 +37,5 @@ jobs:
             -d '{
               "title": "GitHub Actions Job Failed",
               "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
-              "assignees": ["DanyloSafankov"]
+              "assignees": ["DanyloSafankov", "georgethegreatat"]
             }'

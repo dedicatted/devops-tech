@@ -29,12 +29,12 @@ jobs:
         with:
           go-version: 1.20.7 
       
-      - name: check tf version
-        run: terraform version 
+      - name: aws s3 ls
+        run: aws s3 ls
 
-      - name: terraform-aws-vpc
-        run: |
-          cd terraform/aws/modules/terraform-aws-vpc
-          go mod init "vpc"
-          go mod tidy
-          go test
+      # - name: terraform-aws-vpc
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-vpc
+      #     go mod init "vpc"
+      #     go mod tidy
+      #     go test

@@ -7,4 +7,5 @@ variable "key_secret" {
 }
 variable "kms_key_arn" {
   description = "Should be pre-created"
+  default = "somearn"
 }

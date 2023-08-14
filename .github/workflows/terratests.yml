@@ -1,38 +1,55 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Terratests
 
-# Controls when the workflow will run
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0' # Run every Sunday at midnight UTC
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
       - uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          echo "AWS_DEFAULT_REGION=us-east-1"
-          
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.20.7 
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
-      # Runs a set of commands using the runners shell
-      - name: terraform-aws-vpc
+      - name: Testing terraform-aws-vpc
         run: |
           cd terraform/aws/modules/terraform-aws-vpc
           go mod init "vpc"
           go mod tidy
           go test
+      
+      - name: Testing terraform-aws-waf
+        run: |
+          cd terraform/aws/modules/terraform-aws-waf
+          go mod init "waf"
+          go mod tidy
+          go test
+
+      - name: Testing terraform-aws-secrets-manager
+        run: |
+          cd terraform/aws/modules/terraform-aws-secrets-manager
+          go mod init "secrets-manager"
+          go mod tidy
+          go test
+      
+      - name: Create GitHub issue on failure
+        if: ${{ failure() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          curl -X POST -H "Authorization: token $PERSONAL_ACCESS_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/issues" \
+            -d '{
+              "title": "GitHub Actions Job Failed",
+              "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
+              "assignees": ["DanyloSafankov", "georgethegreatat"]
+            }'

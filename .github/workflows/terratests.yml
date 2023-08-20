@@ -46,7 +46,7 @@ jobs:
           go mod tidy
           go test
 
-      - name: Testing terraform-aws-ses
+      - name: Testing terraform-aws-s3
         run: |
           cd terraform/aws/modules/terraform-aws-s3
           go mod init "s3"

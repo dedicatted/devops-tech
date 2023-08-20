@@ -81,6 +81,3 @@ func parseHostedZoneID(output []byte) string {
 	}
 	return ""
 }
-
-
-

@@ -38,7 +38,7 @@ resource "aws_security_group" "rs_ingress" {
 }
 
 resource "aws_redshiftserverless_namespace" "serverless" {
-  namespace_name      = "${var.name}-rs-serverless-ns"
+  namespace_name      = "${var.name}-rs-serverless"
   admin_username      = var.admin_username
   admin_user_password = random_password.master_password.result
   db_name             = "${var.name}_rs_db"
@@ -47,7 +47,7 @@ resource "aws_redshiftserverless_namespace" "serverless" {
 
 resource "aws_redshiftserverless_workgroup" "serverless" {
   namespace_name     = aws_redshiftserverless_namespace.serverless.namespace_name
-  workgroup_name     = "${var.name}-serverless-workgroup-db"
+  workgroup_name     = "${var.name}-serverless-workgroup"
   subnet_ids         = var.subnet_ids
   security_group_ids = [aws_security_group.rs_ingress.id]
 }

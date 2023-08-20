@@ -1,3 +1,3 @@
 variable "name" {
-    default = "ded-buc"
+    default = "ded-s3bucket-12345"
 }

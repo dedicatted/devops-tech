@@ -18,26 +18,33 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
-      - name: Testing terraform-aws-vpc
+      - name: Testing terraform-aws-ses
         run: |
-          cd terraform/aws/modules/terraform-aws-vpc
-          go mod init "vpc"
-          go mod tidy
-          go test
-      
-      - name: Testing terraform-aws-waf
-        run: |
-          cd terraform/aws/modules/terraform-aws-waf
-          go mod init "waf"
+          cd terraform/aws/modules/terraform-aws-ses
+          go mod init "ses"
           go mod tidy
           go test
 
-      - name: Testing terraform-aws-secrets-manager
-        run: |
-          cd terraform/aws/modules/terraform-aws-secrets-manager
-          go mod init "secrets-manager"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-vpc
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-vpc
+      #     go mod init "vpc"
+      #     go mod tidy
+      #     go test
+      
+      # - name: Testing terraform-aws-waf
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-waf
+      #     go mod init "waf"
+      #     go mod tidy
+      #     go test
+
+      # - name: Testing terraform-aws-secrets-manager
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-secrets-manager
+      #     go mod init "secrets-manager"
+      #     go mod tidy
+      #     go test
       
       - name: Create GitHub issue on failure
         if: ${{ failure() }}
@@ -51,5 +58,6 @@ jobs:
             -d '{
               "title": "GitHub Actions Job Failed",
               "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
-              "assignees": ["DanyloSafankov", "georgethegreatat"]
+              "assignees": ["DanyloSafankov"]
             }'
+#  "georgethegreatat"

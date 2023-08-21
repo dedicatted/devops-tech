@@ -10,11 +10,6 @@ resource "aws_s3_bucket_ownership_controls" "bucket" {
   }
 }
 
-resource "aws_s3_bucket_acl" "bucket_acl" {
-  bucket = aws_s3_bucket.bucket.id
-  acl    = "private"
-}
-
 resource "aws_iam_user" "user" {
   name = "${var.name}-s3-user"
   path = "/"
@@ -40,5 +35,4 @@ resource "aws_iam_user_policy" "policy" {
   ]
 }
 EOF
-
 }

@@ -48,7 +48,7 @@ func CreateKMSKey(t *testing.T) {
 
 }
 
-func TestWAF(t *testing.T) {
+func TestSecretsManager(t *testing.T) {
 
 	CreateKMSKey(t)
 	// Construct the terraform options with default retryable errors to handle the most common

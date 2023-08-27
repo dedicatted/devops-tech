@@ -18,40 +18,61 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
-      - name: Testing terraform-aws-redis
+      - name: Testing terraform-aws-rds
         run: |
-          cd terraform/aws/modules/terraform-aws-redis
-          go mod init "redis"
+          cd terraform/aws/modules/terraform-aws-rds
+          go mod init "rds"
           go mod tidy
           go test -timeout 30m
 
-      - name: Testing terraform-aws-s3
+      - name: Testing terraform-aws-redshift
         run: |
-          cd terraform/aws/modules/terraform-aws-s3
-          go mod init "s3"
+          cd terraform/aws/modules/terraform-aws-redshift
+          go mod init "redshift"
+          go mod tidy
+          go test -timeout 30m
+
+      - name: Testing terraform-aws-guardduty
+        run: |
+          cd terraform/aws/modules/terraform-aws-guardduty
+          go mod init "guardduty"
           go mod tidy
           go test
 
-      - name: Testing terraform-aws-vpc
-        run: |
-          cd terraform/aws/modules/terraform-aws-vpc
-          go mod init "vpc"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-redis
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-redis
+      #     go mod init "redis"
+      #     go mod tidy
+      #     go test -timeout 30m
+
+      # - name: Testing terraform-aws-s3
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-s3
+      #     go mod init "s3"
+      #     go mod tidy
+      #     go test
+
+      # - name: Testing terraform-aws-vpc
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-vpc
+      #     go mod init "vpc"
+      #     go mod tidy
+      #     go test
       
-      - name: Testing terraform-aws-waf
-        run: |
-          cd terraform/aws/modules/terraform-aws-waf
-          go mod init "waf"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-waf
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-waf
+      #     go mod init "waf"
+      #     go mod tidy
+      #     go test
 
-      - name: Testing terraform-aws-secrets-manager
-        run: |
-          cd terraform/aws/modules/terraform-aws-secrets-manager
-          go mod init "secrets-manager"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-secrets-manager
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-secrets-manager
+      #     go mod init "secrets-manager"
+      #     go mod tidy
+      #     go test
 
       - name: Testing terraform-aws-ses
         run: |
@@ -72,5 +93,7 @@ jobs:
             -d '{
               "title": "GitHub Actions Job Failed",
               "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
-              "assignees": ["DanyloSafankov", "georgethegreatat"]
+              "assignees": ["DanyloSafankov"]
             }'
+
+# , "georgethegreatat"

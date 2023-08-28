@@ -18,6 +18,27 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
+      - name: Testing terraform-aws-rds
+        run: |
+          cd terraform/aws/modules/terraform-aws-rds
+          go mod init "rds"
+          go mod tidy
+          go test -timeout 30m
+
+      - name: Testing terraform-aws-redshift
+        run: |
+          cd terraform/aws/modules/terraform-aws-redshift
+          go mod init "redshift"
+          go mod tidy
+          go test -timeout 30m
+
+      - name: Testing terraform-aws-guardduty
+        run: |
+          cd terraform/aws/modules/terraform-aws-guardduty
+          go mod init "guardduty"
+          go mod tidy
+          go test
+
       - name: Testing terraform-aws-redis
         run: |
           cd terraform/aws/modules/terraform-aws-redis
@@ -74,3 +95,4 @@ jobs:
               "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
               "assignees": ["DanyloSafankov", "georgethegreatat"]
             }'
+

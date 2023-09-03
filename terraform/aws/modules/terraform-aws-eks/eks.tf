@@ -68,7 +68,7 @@ module "eks" {
       # scripts/configuration changes after the bootstrap script has been run
     }
   }
-  create_aws_auth_configmap = true
+
   manage_aws_auth_configmap = true
 
   # aws_auth_roles = [
@@ -80,8 +80,8 @@ module "eks" {
   # ]
   aws_auth_users = [
     {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/terraform-test"
-      username = "terraform-test"
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/diligend_tf_admin"
+      username = "diligend_tf_admin"
       groups   = ["system:masters"]
     }
   ]

@@ -18,6 +18,20 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
+      - name: Testing terraform-aws-kms
+        run: |
+          cd terraform/aws/modules/terraform-aws-kms
+          go mod init "kms"
+          go mod tidy
+          go test
+
+      - name: Testing terraform-aws-cloudtrail
+        run: |
+          cd terraform/aws/modules/terraform-aws-cloudtrail
+          go mod init "cloudtrail"
+          go mod tidy
+          go test
+
       - name: Testing terraform-aws-rds
         run: |
           cd terraform/aws/modules/terraform-aws-rds

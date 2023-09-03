@@ -48,7 +48,7 @@ jobs:
           cd terraform/aws/modules/terraform-aws-eks
           terraform init
           export TF_VAR_kms_key_arn="arn:aws:kms:us-east-1:338096867149:key/00af221b-ae1a-467b-9791-10980b2d0c91"
-          terraform apply --auto-approve
+          terraform destroy --auto-approve
 
       # - name: Testing terraform-aws-kms
       #   run: |

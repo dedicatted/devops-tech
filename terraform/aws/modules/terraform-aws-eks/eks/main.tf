@@ -552,7 +552,7 @@ resource "kubernetes_config_map" "aws_auth" {
 }
 
 resource "time_sleep" "wait_cm" {
-  create_duration = "60s"
+  create_duration = "30s"
   depends_on      = [kubernetes_config_map.aws_auth]
 }
 
@@ -570,6 +570,6 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
 
   depends_on = [
     # Required for instances where the configmap does not exist yet to avoid race condition
-    time_sleep.wait_cm
+    time_sleep.wait_cm,
   ]
 }

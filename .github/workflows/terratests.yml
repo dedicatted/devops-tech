@@ -5,11 +5,6 @@ on:
   schedule:
     - cron: '0 0 * * 0' # Run every Sunday at midnight UTC
 
-env:
-  TF_STATE_BUCKET: terratests-ded-s3-state
-  TF_VAR_env_name: test
-  TF_VAR_portal_prefix: donor-tap-test
-
 jobs:
   build:
     runs-on: ubuntu-latest

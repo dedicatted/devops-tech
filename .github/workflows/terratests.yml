@@ -23,109 +23,82 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
-      - name: Check if S3 Bucket For State Exists
-        id: check-bucket
+      - name: Testing terraform-aws-kms
         run: |
-          if aws s3 ls "s3://$TF_STATE_BUCKET" 2>&1 | grep -q 'NoSuchBucket'; then
-            echo "S3 bucket does not exist"
-            echo "Creating the bucket"
-            # Create the bucket
-            aws s3api create-bucket --bucket "$TF_STATE_BUCKET" --region $AWS_DEFAULT_REGION
-            echo "S3 bucket created"
-          else
-            echo "S3 bucket exists"
-          fi
+          cd terraform/aws/modules/terraform-aws-kms
+          go mod init "kms"
+          go mod tidy
+          go test
 
-      - name: Generate backend.conf
+      - name: Testing terraform-aws-cloudtrail
         run: |
-            echo "bucket = \"$TF_STATE_BUCKET\"" > backend.conf
-            echo "key    = \"$TF_VAR_env_name/terraform.tfstate\"" >> backend.conf
-            echo "region = \"$AWS_DEFAULT_REGION\"" >> backend.conf
-            echo "encrypt = true" >> backend.conf
+          cd terraform/aws/modules/terraform-aws-cloudtrail
+          go mod init "cloudtrail"
+          go mod tidy
+          go test
 
-      - name: Testing terraform-aws-eks
+      - name: Testing terraform-aws-rds
         run: |
-          cd terraform/aws/modules/terraform-aws-eks
-          terraform init
-          export TF_VAR_kms_key_arn="arn:aws:kms:us-east-1:338096867149:key/00af221b-ae1a-467b-9791-10980b2d0c91"
-          terraform destroy --auto-approve
+          cd terraform/aws/modules/terraform-aws-rds
+          go mod init "rds"
+          go mod tidy
+          go test -timeout 30m
 
-      # - name: Testing terraform-aws-kms
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-kms
-      #     go mod init "kms"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-redshift
+        run: |
+          cd terraform/aws/modules/terraform-aws-redshift
+          go mod init "redshift"
+          go mod tidy
+          go test -timeout 30m
 
-      # - name: Testing terraform-aws-cloudtrail
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-cloudtrail
-      #     go mod init "cloudtrail"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-guardduty
+        run: |
+          cd terraform/aws/modules/terraform-aws-guardduty
+          go mod init "guardduty"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-rds
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-rds
-      #     go mod init "rds"
-      #     go mod tidy
-      #     go test -timeout 30m
+      - name: Testing terraform-aws-redis
+        run: |
+          cd terraform/aws/modules/terraform-aws-redis
+          go mod init "redis"
+          go mod tidy
+          go test -timeout 30m
 
-      # - name: Testing terraform-aws-redshift
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-redshift
-      #     go mod init "redshift"
-      #     go mod tidy
-      #     go test -timeout 30m
+      - name: Testing terraform-aws-s3
+        run: |
+          cd terraform/aws/modules/terraform-aws-s3
+          go mod init "s3"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-guardduty
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-guardduty
-      #     go mod init "guardduty"
-      #     go mod tidy
-      #     go test
-
-      # - name: Testing terraform-aws-redis
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-redis
-      #     go mod init "redis"
-      #     go mod tidy
-      #     go test -timeout 30m
-
-      # - name: Testing terraform-aws-s3
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-s3
-      #     go mod init "s3"
-      #     go mod tidy
-      #     go test
-
-      # - name: Testing terraform-aws-vpc
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-vpc
-      #     go mod init "vpc"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-vpc
+        run: |
+          cd terraform/aws/modules/terraform-aws-vpc
+          go mod init "vpc"
+          go mod tidy
+          go test
       
-      # - name: Testing terraform-aws-waf
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-waf
-      #     go mod init "waf"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-waf
+        run: |
+          cd terraform/aws/modules/terraform-aws-waf
+          go mod init "waf"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-secrets-manager
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-secrets-manager
-      #     go mod init "secrets-manager"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-secrets-manager
+        run: |
+          cd terraform/aws/modules/terraform-aws-secrets-manager
+          go mod init "secrets-manager"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-ses
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-ses
-      #     go mod init "ses"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-ses
+        run: |
+          cd terraform/aws/modules/terraform-aws-ses
+          go mod init "ses"
+          go mod tidy
+          go test
       
       - name: Create GitHub issue on failure
         if: ${{ failure() }}

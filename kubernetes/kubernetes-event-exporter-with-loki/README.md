@@ -49,8 +49,9 @@ Once Loki is deployed, we will go ahead to deploy the Kubernetes event exporter.
 ```
 replicaCount: 1  
   
-image:  
-  repository: ghcr.io/resmoio/kubernetes-event-exporter  
+image:
+  registry: ghcr.io
+  repository: resmoio/kubernetes-event-exporter  
   pullPolicy: IfNotPresent  
   # Overrides the image tag whose default is the chart appVersion.  
   tag: latest  

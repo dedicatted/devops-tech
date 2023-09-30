@@ -97,6 +97,8 @@ jobs:
           cat terraform.tfvars
           echo "finish setting private subnets"
 
+          terraform destroy --auto-approve
+
           # cd ..
           # cd terraform/aws/modules/terraform-aws-eks
           # go mod init "eks"

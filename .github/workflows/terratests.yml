@@ -81,10 +81,11 @@ jobs:
           EOL
 
           terraform init
-          # terraform apply --auto-approve
+          terraform apply --auto-approve
           
-          # export TF_VAR_kms_key_arn=$(terraform output key_arn)
-          # export TF_VAR_vpc_id=$(terraform output vpc_id)
+          export TF_VAR_kms_key_arn=$(terraform output key_arn)
+          export TF_VAR_vpc_id=$(terraform output vpc_id)
+          export TF_VAR_private_subnets=$(terraform output private_subnets)
 
           cd ..
           cd terraform/aws/modules/terraform-aws-eks
@@ -94,6 +95,8 @@ jobs:
 
           unset TF_VAR_kms_key_arn
           unset TF_VAR_vpc_id
+          unset TF_VAR_private_subnets
+          
           cd ../../../../
           echo "where am i"
           pwd

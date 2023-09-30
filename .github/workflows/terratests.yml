@@ -22,6 +22,8 @@ jobs:
         run: |
           mkdir deploy
           cd deploy
+          echo "pwd"
+          pwd
           touch main.tf
           cat <<EOL >> main.tf
           data "aws_caller_identity" "current" {}

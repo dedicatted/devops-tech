@@ -27,7 +27,7 @@ jobs:
           data "aws_caller_identity" "current" {}
 
           module "kms_key" {
-            source      = "../terraform-aws-kms"
+            source      = "../../terraform-aws-kms"
             description = "Customer managed key to encrypt EKS managed node group volumes"
             key_administrators = [
               data.aws_caller_identity.current.arn
@@ -38,7 +38,7 @@ jobs:
           }
 
           module "vpc" {
-            source                             = "../terraform-aws-vpc"
+            source                             = "../../terraform-aws-vpc"
             name                               = "\${var.env_name}-vpc"
             cidr                               = var.cidr
             azs                                = ["\${var.region}a", "\${var.region}b", "\${var.region}c"]
@@ -68,7 +68,7 @@ jobs:
             default = "test" 
           }
           variable "cidr" {
-            description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
+            description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using ipv4_netmask_length & ipv4_ipam_pool_id"
             type        = string
             default     = "10.0.0.0/16"
           }

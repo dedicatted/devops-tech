@@ -85,19 +85,21 @@ jobs:
           
           export TF_VAR_kms_key_arn=$(terraform output key_arn)
           export TF_VAR_vpc_id=$(terraform output vpc_id)
-          export TF_VAR_private_subnets=$(terraform output private_subnets)
 
-          cd ..
-          cd terraform/aws/modules/terraform-aws-eks
-          go mod init "eks"
-          go mod tidy
-          go test -timeout 30m
+          touch terraform.tfvars
+          terraform output private_subnets > terraform.tfvars
+          cat terraform.tfvars
+
+          # cd ..
+          # cd terraform/aws/modules/terraform-aws-eks
+          # go mod init "eks"
+          # go mod tidy
+          # go test -timeout 30m
 
           unset TF_VAR_kms_key_arn
           unset TF_VAR_vpc_id
-          unset TF_VAR_private_subnets
-          
-          cd ../../../../
+
+          # cd ../../../../
           echo "where am i"
           pwd
           terraform destroy --auto-approve

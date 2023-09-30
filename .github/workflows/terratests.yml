@@ -82,13 +82,16 @@ jobs:
 
           terraform init
           terraform apply --auto-approve
-          
+          echo "setting kms and vpc"
           export TF_VAR_kms_key_arn=$(terraform output key_arn)
           export TF_VAR_vpc_id=$(terraform output vpc_id)
+          echo "finish setting kms and vpc"
 
+          echo "setting private subnets"
           touch terraform.tfvars
           terraform output private_subnets > terraform.tfvars
           cat terraform.tfvars
+          echo "finish setting private subnets"
 
           # cd ..
           # cd terraform/aws/modules/terraform-aws-eks

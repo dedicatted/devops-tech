@@ -31,6 +31,7 @@ jobs:
           module "kms_key" {
             source      = "./../terraform/aws/modules/terraform-aws-kms"
             description = "Customer managed key to encrypt EKS managed node group volumes"
+            deletion_window_in_days = 7
             key_administrators = [
               data.aws_caller_identity.current.arn
             ]
@@ -79,12 +80,22 @@ jobs:
           }
           EOL
 
-          pwd
-          echo "check the file"
-          cat main.tf
-          cat variables.tf
           terraform init
           terraform apply --auto-approve
+          export TF_VAR_kms_key_arn=$(terraform output key_arn)
+          export TF_VAR_vpc_id=$(terraform output vpc_id)
+
+          cd ..
+          cd terraform/aws/modules/terraform-aws-eks
+          go mod init "eks"
+          go mod tidy
+          go test -timeout 30m
+
+          unset TF_VAR_kms_key_arn
+          unset TF_VAR_vpc_id
+          cd ../../../../
+          echo "where am i"
+          pwd
           terraform destroy --auto-approve
 
 

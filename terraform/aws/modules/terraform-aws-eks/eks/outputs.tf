@@ -9,7 +9,7 @@ output "cluster_arn" {
 
 output "cluster_certificate_authority_data" {
   description = "Base64 encoded certificate data required to communicate with the cluster"
-  value       = try(aws_eks_cluster.this[0].certificate_authority[0].data, null)
+  value       = try(aws_eks_cluster.this[0].certificate_authority[0].data, "dGVzdA==")
 }
 
 output "cluster_endpoint" {

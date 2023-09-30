@@ -1,28 +1,25 @@
 variable "region" {
-  default = "us-east-1"
+  default = "eu-central-1"
 }
 
 variable "name" {
   default = "devops"
 }
 variable "vpc_id" {
-  description = "default vpc us-east-1"
-  default = "vpc-0f5e6ce17bb4dd77d"
+  #default = "vpc-0dd725eae78fcdd49"
 }
 variable "private_subnets" {
-  description = "There are default PUBLIC subnets just to test the deployment"
-  default     = ["subnet-07d95e0b059c97b9a", "subnet-01750b5875e3df47d", "subnet-009315aa49ef29e26"]
+ #default = ["subnet-067b11f0152b7ce04", "subnet-0b71fc3428b80f0ed", "subnet-000b82a70cf385d4c"]
 }
 variable "cluster_version" {
   default = "1.27"
 }
 variable "ami_id" {
-  description = "us-east-1 ami-id"
-  default = "ami-061112afff4339a5f"
+  default = "ami-0e38f9978e7cac6dc"
 }
 
 variable "kms_key_arn" {
-
+  #default = "arn:aws:kms:us-east-1:338096867149:key/118c0596-cf82-481f-b078-1a2ff9f32cda"
 }
 variable "cloudwatch_log_group_retention_in_days" {
   type    = number
@@ -32,3 +29,16 @@ variable "cloudwatch_log_group_retention_in_days" {
 # variable "sso_role_arn" {
 
 # }
+variable "max_pods" {
+  default = 29
+}
+variable "instance_types" {
+  default = "m6i.large"
+}
+variable "default_instance_types" {
+  default = "m6i.large"
+}
+variable "create" {
+  type    = bool
+  default = true
+}

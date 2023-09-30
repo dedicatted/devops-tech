@@ -1,9 +1,11 @@
 module "eks" {
   source                                 = "./eks"
+  create                                 = var.create
   cluster_name                           = "${var.name}-eks"
   cluster_version                        = var.cluster_version
   cluster_endpoint_public_access         = true
   cloudwatch_log_group_retention_in_days = var.cloudwatch_log_group_retention_in_days
+  create_kms_key                         = false
 
   cluster_addons = {
     coredns = {
@@ -19,32 +21,33 @@ module "eks" {
     }
   }
   # AWS KMS Encryption Key
-  cluster_encryption_config = [{
-    provider_key_arn = var.kms_key_arn
+  cluster_encryption_config = {
     resources        = ["secrets"]
-  }]
+    provider_key_arn = var.kms_key_arn
+
+  }
   #VPC and subnets
   vpc_id     = var.vpc_id
   subnet_ids = var.private_subnets
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
-    instance_types = ["m6i.large"]
+    instance_types = [var.default_instance_types]
   }
 
   eks_managed_node_groups = {
-    devops = {
+    "${var.name}" = {
       min_size       = 1
       max_size       = 4
       desired_size   = 1
-      instance_types = ["m6i.large"]
+      instance_types = [var.instance_types]
       capacity_type  = "ON_DEMAND"
       ami_id         = var.ami_id
       # By default, EKS managed node groups will not append bootstrap script;
       # this adds it back in using the default template provided by the module
       # Note: this assumes the AMI provided is an EKS optimized AMI derivative
       enable_bootstrap_user_data = true
-      bootstrap_extra_args       = "--container-runtime containerd --kubelet-extra-args '--max-pods=20'"
+      bootstrap_extra_args       = "--container-runtime containerd --kubelet-extra-args '--max-pods=${var.max_pods}'"
 
       pre_bootstrap_user_data = <<-EOT
         export CONTAINER_RUNTIME="containerd"
@@ -68,9 +71,7 @@ module "eks" {
       # scripts/configuration changes after the bootstrap script has been run
     }
   }
-
   manage_aws_auth_configmap = true
-
   # aws_auth_roles = [
   #   {
   #     rolearn  = var.sso_role_arn
@@ -80,8 +81,8 @@ module "eks" {
   # ]
   aws_auth_users = [
     {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/diligend_tf_admin"
-      username = "diligend_tf_admin"
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/terraform-test"
+      username = "terraform-test"
       groups   = ["system:masters"]
     }
   ]

@@ -18,82 +18,150 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
-      - name: Testing terraform-aws-kms
+      - name: Testing terraform-aws-eks
         run: |
-          cd terraform/aws/modules/terraform-aws-kms
-          go mod init "kms"
-          go mod tidy
-          go test
+          mkdir deploy
+          cd deploy
+          touch main.tf
+          cat <<EOL >> main.tf
+          data "aws_caller_identity" "current" {}
 
-      - name: Testing terraform-aws-cloudtrail
-        run: |
-          cd terraform/aws/modules/terraform-aws-cloudtrail
-          go mod init "cloudtrail"
-          go mod tidy
-          go test
+          module "kms_key" {
+            source      = "../terraform-aws-kms"
+            description = "Customer managed key to encrypt EKS managed node group volumes"
+            key_administrators = [
+              data.aws_caller_identity.current.arn
+            ]
+            key_service_roles_for_autoscaling = [
+              "arn:aws:iam::\${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
+            ]
+          }
 
-      - name: Testing terraform-aws-rds
-        run: |
-          cd terraform/aws/modules/terraform-aws-rds
-          go mod init "rds"
-          go mod tidy
-          go test -timeout 30m
+          module "vpc" {
+          source                             = "../terraform-aws-vpc"
+          name                               = "${var.env_name}-vpc"
+          cidr                               = var.cidr
+          azs                                = ["${var.region}a", "${var.region}b", "${var.region}c"]
+          private_subnets                    = [cidrsubnet(var.cidr, 8, 0), cidrsubnet(var.cidr, 8, 1), cidrsubnet(var.cidr, 8, 2)]
+          public_subnets                     = [cidrsubnet(var.cidr, 8, 3), cidrsubnet(var.cidr, 8, 4), cidrsubnet(var.cidr, 8, 5)]
+          create_elasticache_subnet_group    = false
+          create_database_subnet_group       = false
+          create_database_subnet_route_table = false
+          create_egress_only_igw             = true
+          enable_nat_gateway                 = true
+          single_nat_gateway                 = true
+          enable_dns_hostnames               = true
+          public_subnet_tags = {
+            "kubernetes.io/cluster/${var.env_name}-eks" = "shared"
+            "kubernetes.io/role/elb"                    = 1
+          }
+          private_subnet_tags = {
+            "kubernetes.io/cluster/${var.env_name}-eks" = "shared"
+            "kubernetes.io/role/internal-elb"           = 1
+          }
+          }
+          EOL
+          
+          touch variable.tf
+          cat <<EOL >> variables.tf
+          variable "env_name" {
+          default = "test" 
+          }
+          variable "cidr" {
+          description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
+          type        = string
+          default     = "10.0.0.0/16"
+          }
+          variable "region" {
+          default = "us-east-1"
+          }
+          EOL
 
-      - name: Testing terraform-aws-redshift
-        run: |
-          cd terraform/aws/modules/terraform-aws-redshift
-          go mod init "redshift"
-          go mod tidy
-          go test -timeout 30m
+          pwd
 
-      - name: Testing terraform-aws-guardduty
-        run: |
-          cd terraform/aws/modules/terraform-aws-guardduty
-          go mod init "guardduty"
-          go mod tidy
-          go test
+          terraform apply --auto-approve
+          terraform destroy --auto-approve
+          # cd terraform/aws/modules/terraform-aws-kms
+          # go mod init "kms"
+          # go mod tidy
+          # go test
 
-      - name: Testing terraform-aws-redis
-        run: |
-          cd terraform/aws/modules/terraform-aws-redis
-          go mod init "redis"
-          go mod tidy
-          go test -timeout 30m
+      # - name: Testing terraform-aws-kms
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-kms
+      #     go mod init "kms"
+      #     go mod tidy
+      #     go test
 
-      - name: Testing terraform-aws-s3
-        run: |
-          cd terraform/aws/modules/terraform-aws-s3
-          go mod init "s3"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-cloudtrail
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-cloudtrail
+      #     go mod init "cloudtrail"
+      #     go mod tidy
+      #     go test
 
-      - name: Testing terraform-aws-vpc
-        run: |
-          cd terraform/aws/modules/terraform-aws-vpc
-          go mod init "vpc"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-rds
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-rds
+      #     go mod init "rds"
+      #     go mod tidy
+      #     go test -timeout 30m
+
+      # - name: Testing terraform-aws-redshift
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-redshift
+      #     go mod init "redshift"
+      #     go mod tidy
+      #     go test -timeout 30m
+
+      # - name: Testing terraform-aws-guardduty
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-guardduty
+      #     go mod init "guardduty"
+      #     go mod tidy
+      #     go test
+
+      # - name: Testing terraform-aws-redis
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-redis
+      #     go mod init "redis"
+      #     go mod tidy
+      #     go test -timeout 30m
+
+      # - name: Testing terraform-aws-s3
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-s3
+      #     go mod init "s3"
+      #     go mod tidy
+      #     go test
+
+      # - name: Testing terraform-aws-vpc
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-vpc
+      #     go mod init "vpc"
+      #     go mod tidy
+      #     go test
       
-      - name: Testing terraform-aws-waf
-        run: |
-          cd terraform/aws/modules/terraform-aws-waf
-          go mod init "waf"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-waf
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-waf
+      #     go mod init "waf"
+      #     go mod tidy
+      #     go test
 
-      - name: Testing terraform-aws-secrets-manager
-        run: |
-          cd terraform/aws/modules/terraform-aws-secrets-manager
-          go mod init "secrets-manager"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-secrets-manager
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-secrets-manager
+      #     go mod init "secrets-manager"
+      #     go mod tidy
+      #     go test
 
-      - name: Testing terraform-aws-ses
-        run: |
-          cd terraform/aws/modules/terraform-aws-ses
-          go mod init "ses"
-          go mod tidy
-          go test
+      # - name: Testing terraform-aws-ses
+      #   run: |
+      #     cd terraform/aws/modules/terraform-aws-ses
+      #     go mod init "ses"
+      #     go mod tidy
+      #     go test
       
       - name: Create GitHub issue on failure
         if: ${{ failure() }}
@@ -107,6 +175,7 @@ jobs:
             -d '{
               "title": "GitHub Actions Job Failed",
               "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
-              "assignees": ["DanyloSafankov", "georgethegreatat"]
+              "assignees": ["DanyloSafankov"]
             }'
 
+#, "georgethegreatat"

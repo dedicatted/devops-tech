@@ -81,9 +81,10 @@ jobs:
           EOL
 
           terraform init
-          terraform apply --auto-approve
-          export TF_VAR_kms_key_arn=$(terraform output key_arn)
-          export TF_VAR_vpc_id=$(terraform output vpc_id)
+          # terraform apply --auto-approve
+          
+          # export TF_VAR_kms_key_arn=$(terraform output key_arn)
+          # export TF_VAR_vpc_id=$(terraform output vpc_id)
 
           cd ..
           cd terraform/aws/modules/terraform-aws-eks

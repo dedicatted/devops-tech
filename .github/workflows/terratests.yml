@@ -81,6 +81,7 @@ jobs:
           echo "check the file"
           cat main.tf
           cat variables.tf
+          terarform init
           terraform apply --auto-approve
           terraform destroy --auto-approve
 

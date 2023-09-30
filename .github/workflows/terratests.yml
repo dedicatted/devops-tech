@@ -18,7 +18,7 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
-      - name: Testing terraform-aws-eks
+            - name: Testing terraform-aws-eks
         run: |
           mkdir deploy
           cd deploy
@@ -38,53 +38,52 @@ jobs:
           }
 
           module "vpc" {
-          source                             = "../terraform-aws-vpc"
-          name                               = "${var.env_name}-vpc"
-          cidr                               = var.cidr
-          azs                                = ["${var.region}a", "${var.region}b", "${var.region}c"]
-          private_subnets                    = [cidrsubnet(var.cidr, 8, 0), cidrsubnet(var.cidr, 8, 1), cidrsubnet(var.cidr, 8, 2)]
-          public_subnets                     = [cidrsubnet(var.cidr, 8, 3), cidrsubnet(var.cidr, 8, 4), cidrsubnet(var.cidr, 8, 5)]
-          create_elasticache_subnet_group    = false
-          create_database_subnet_group       = false
-          create_database_subnet_route_table = false
-          create_egress_only_igw             = true
-          enable_nat_gateway                 = true
-          single_nat_gateway                 = true
-          enable_dns_hostnames               = true
-          public_subnet_tags = {
-            "kubernetes.io/cluster/${var.env_name}-eks" = "shared"
-            "kubernetes.io/role/elb"                    = 1
-          }
-          private_subnet_tags = {
-            "kubernetes.io/cluster/${var.env_name}-eks" = "shared"
-            "kubernetes.io/role/internal-elb"           = 1
-          }
+            source                             = "../terraform-aws-vpc"
+            name                               = "\${var.env_name}-vpc"
+            cidr                               = var.cidr
+            azs                                = ["\${var.region}a", "\${var.region}b", "\${var.region}c"]
+            private_subnets                    = [cidrsubnet(var.cidr, 8, 0), cidrsubnet(var.cidr, 8, 1), cidrsubnet(var.cidr, 8, 2)]
+            public_subnets                     = [cidrsubnet(var.cidr, 8, 3), cidrsubnet(var.cidr, 8, 4), cidrsubnet(var.cidr, 8, 5)]
+            create_elasticache_subnet_group    = false
+            create_database_subnet_group       = false
+            create_database_subnet_route_table = false
+            create_egress_only_igw             = true
+            enable_nat_gateway                 = true
+            single_nat_gateway                 = true
+            enable_dns_hostnames               = true
+            public_subnet_tags = {
+              "kubernetes.io/cluster/\${var.env_name}-eks" = "shared"
+              "kubernetes.io/role/elb"                    = 1
+            }
+            private_subnet_tags = {
+              "kubernetes.io/cluster/\${var.env_name}-eks" = "shared"
+              "kubernetes.io/role/internal-elb"           = 1
+            }
           }
           EOL
           
           touch variable.tf
           cat <<EOL >> variables.tf
           variable "env_name" {
-          default = "test" 
+            default = "test" 
           }
           variable "cidr" {
-          description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
-          type        = string
-          default     = "10.0.0.0/16"
+            description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
+            type        = string
+            default     = "10.0.0.0/16"
           }
           variable "region" {
-          default = "us-east-1"
+            default = "us-east-1"
           }
           EOL
 
           pwd
-
+          echo "check the file"
+          cat main.tf
+          cat variables.tf
           terraform apply --auto-approve
           terraform destroy --auto-approve
-          # cd terraform/aws/modules/terraform-aws-kms
-          # go mod init "kms"
-          # go mod tidy
-          # go test
+
 
       # - name: Testing terraform-aws-kms
       #   run: |

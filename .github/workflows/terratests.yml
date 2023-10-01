@@ -40,7 +40,7 @@ jobs:
             value = module.kms.key_arn
           }
 
-          module "kms_key" {
+          module "kms" {
             source      = "./../terraform/aws/modules/terraform-aws-kms"
             description = "Customer managed key to encrypt EKS managed node group volumes"
             deletion_window_in_days = 7

@@ -119,6 +119,7 @@ jobs:
           unset TF_VAR_vpc_id
 
           cd ../../../../
+          cd deploy
           terraform destroy --auto-approve
 
 

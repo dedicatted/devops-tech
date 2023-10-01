@@ -109,84 +109,84 @@ jobs:
 
           cd ../../../../deploy
           terraform destroy --auto-approve
+          cd ..
 
+      - name: Testing terraform-aws-kms
+        run: |
+          cd terraform/aws/modules/terraform-aws-kms
+          go mod init "kms"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-kms
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-kms
-      #     go mod init "kms"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-cloudtrail
+        run: |
+          cd terraform/aws/modules/terraform-aws-cloudtrail
+          go mod init "cloudtrail"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-cloudtrail
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-cloudtrail
-      #     go mod init "cloudtrail"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-rds
+        run: |
+          cd terraform/aws/modules/terraform-aws-rds
+          go mod init "rds"
+          go mod tidy
+          go test -timeout 30m
 
-      # - name: Testing terraform-aws-rds
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-rds
-      #     go mod init "rds"
-      #     go mod tidy
-      #     go test -timeout 30m
+      - name: Testing terraform-aws-redshift
+        run: |
+          cd terraform/aws/modules/terraform-aws-redshift
+          go mod init "redshift"
+          go mod tidy
+          go test -timeout 30m
 
-      # - name: Testing terraform-aws-redshift
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-redshift
-      #     go mod init "redshift"
-      #     go mod tidy
-      #     go test -timeout 30m
+      - name: Testing terraform-aws-guardduty
+        run: |
+          cd terraform/aws/modules/terraform-aws-guardduty
+          go mod init "guardduty"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-guardduty
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-guardduty
-      #     go mod init "guardduty"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-redis
+        run: |
+          cd terraform/aws/modules/terraform-aws-redis
+          go mod init "redis"
+          go mod tidy
+          go test -timeout 30m
 
-      # - name: Testing terraform-aws-redis
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-redis
-      #     go mod init "redis"
-      #     go mod tidy
-      #     go test -timeout 30m
+      - name: Testing terraform-aws-s3
+        run: |
+          cd terraform/aws/modules/terraform-aws-s3
+          go mod init "s3"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-s3
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-s3
-      #     go mod init "s3"
-      #     go mod tidy
-      #     go test
-
-      # - name: Testing terraform-aws-vpc
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-vpc
-      #     go mod init "vpc"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-vpc
+        run: |
+          cd terraform/aws/modules/terraform-aws-vpc
+          go mod init "vpc"
+          go mod tidy
+          go test
       
-      # - name: Testing terraform-aws-waf
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-waf
-      #     go mod init "waf"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-waf
+        run: |
+          cd terraform/aws/modules/terraform-aws-waf
+          go mod init "waf"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-secrets-manager
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-secrets-manager
-      #     go mod init "secrets-manager"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-secrets-manager
+        run: |
+          cd terraform/aws/modules/terraform-aws-secrets-manager
+          go mod init "secrets-manager"
+          go mod tidy
+          go test
 
-      # - name: Testing terraform-aws-ses
-      #   run: |
-      #     cd terraform/aws/modules/terraform-aws-ses
-      #     go mod init "ses"
-      #     go mod tidy
-      #     go test
+      - name: Testing terraform-aws-ses
+        run: |
+          cd terraform/aws/modules/terraform-aws-ses
+          go mod init "ses"
+          go mod tidy
+          go test
       
       # - name: Create GitHub issue on failure
       #   if: ${{ failure() }}

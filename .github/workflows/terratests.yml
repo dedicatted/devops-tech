@@ -28,6 +28,18 @@ jobs:
           cat <<EOL >> main.tf
           data "aws_caller_identity" "current" {}
 
+          output "private_subnets"{
+            value = module.vpc.private_subnets
+          }
+
+          output "vpc_id"{
+            value = module.vpc.vpc_id
+          }
+
+          output "key_arn"{
+            value = module.kms.key_arn
+          }
+
           module "kms_key" {
             source      = "./../terraform/aws/modules/terraform-aws-kms"
             description = "Customer managed key to encrypt EKS managed node group volumes"
@@ -109,8 +121,8 @@ jobs:
           unset TF_VAR_vpc_id
 
           # cd ../../../../
-          echo "where am i"
-          pwd
+          echo "cat main.tf"
+          cat main.tf
           terraform destroy --auto-approve
 
 

@@ -94,22 +94,12 @@ jobs:
 
           terraform init
           terraform apply --auto-approve
-          echo "setting kms and vpc"
-          export TF_VAR_kms_key_arn=$(terraform output key_arn)
-          export TF_VAR_vpc_id=$(terraform output vpc_id)
-          echo "finish setting kms and vpc"
 
-          echo "output"
-          terraform output
-          echo "output"
-
-          echo "setting private subnets"
           touch terraform.tfvars
           echo "private_subnets=$(terraform output private_subnets)" >> terraform.tfvars
           echo "kms_key_arn=$(terraform output key_arn)" >> terraform.tfvars
           echo "vpc_id=$(terraform output vpc_id)" >> terraform.tfvars
           mv terraform.tfvars ../terraform/aws/modules/terraform-aws-eks
-          echo "finish setting private subnets"
 
           cd ..
           cd terraform/aws/modules/terraform-aws-eks
@@ -117,15 +107,7 @@ jobs:
           go mod tidy
           go test -timeout 30m
 
-          unset TF_VAR_kms_key_arn
-          unset TF_VAR_vpc_id
-
-          echo "pwd"
-          pwd
-          cd ../../../../
-          echo "pwd"
-          pwd
-          cd deploy
+          cd ../../../../deploy
           terraform destroy --auto-approve
 
 

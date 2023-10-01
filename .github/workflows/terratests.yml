@@ -106,7 +106,7 @@ jobs:
           echo "setting private subnets"
           touch terraform.tfvars
           echo "private_subnets=$(terraform output private_subnets)" > terraform.tfvars
-          cat terraform.tfvars
+          mv terraform.tfvars terraform/aws/modules/terraform-aws-eks
           echo "finish setting private subnets"
 
           cd ..

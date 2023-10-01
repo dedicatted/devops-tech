@@ -188,19 +188,17 @@ jobs:
           go mod tidy
           go test
       
-      # - name: Create GitHub issue on failure
-      #   if: ${{ failure() }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      #   run: |
-      #     curl -X POST -H "Authorization: token $PERSONAL_ACCESS_TOKEN" \
-      #       -H "Accept: application/vnd.github.v3+json" \
-      #       "https://api.github.com/repos/${{ github.repository }}/issues" \
-      #       -d '{
-      #         "title": "GitHub Actions Job Failed",
-      #         "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
-      #         "assignees": ["DanyloSafankov"]
-      #       }'
-
-#, "georgethegreatat"
+      - name: Create GitHub issue on failure
+        if: ${{ failure() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          curl -X POST -H "Authorization: token $PERSONAL_ACCESS_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/issues" \
+            -d '{
+              "title": "GitHub Actions Job Failed",
+              "body": "The GitHub Actions job failed in workflow '${{ github.workflow }}' for repository '${{ github.repository }}'.",
+              "assignees": ["DanyloSafankov", "georgethegreatat"]
+            }'

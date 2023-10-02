@@ -6,10 +6,10 @@ variable "name" {
   default = "devops"
 }
 variable "vpc_id" {
-  #default = "vpc-0dd725eae78fcdd49"
+  default = "vpc-0f5e6ce17bb4dd77d"
 }
 variable "private_subnets" {
- #default = ["subnet-067b11f0152b7ce04", "subnet-0b71fc3428b80f0ed", "subnet-000b82a70cf385d4c"]
+ default = ["subnet-067b11f0152b7ce04", "subnet-0b71fc3428b80f0ed", "subnet-000b82a70cf385d4c"]
 }
 variable "cluster_version" {
   default = "1.27"
@@ -19,7 +19,7 @@ variable "ami_id" {
 }
 
 variable "kms_key_arn" {
-  #default = "arn:aws:kms:us-east-1:338096867149:key/118c0596-cf82-481f-b078-1a2ff9f32cda"
+
 }
 variable "cloudwatch_log_group_retention_in_days" {
   type    = number

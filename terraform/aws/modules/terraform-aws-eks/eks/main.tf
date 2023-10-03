@@ -60,11 +60,11 @@ resource "aws_eks_cluster" "this" {
 
   dynamic "encryption_config" {
     # Not available on Outposts
-    for_each = toset(var.cluster_encryption_config)
+    for_each = local.enable_cluster_encryption_config ? [var.cluster_encryption_config] : []
 
     content {
       provider {
-        key_arn = encryption_config.value.provider_key_arn
+        key_arn = var.create_kms_key ? module.kms.key_arn : encryption_config.value.provider_key_arn
       }
       resources = encryption_config.value.resources
     }
@@ -533,7 +533,6 @@ locals {
     mapAccounts = yamlencode(var.aws_auth_accounts)
   }
 }
-
 resource "kubernetes_config_map" "aws_auth" {
   count = var.create && var.create_aws_auth_configmap ? 1 : 0
 
@@ -551,11 +550,6 @@ resource "kubernetes_config_map" "aws_auth" {
   }
 }
 
-resource "time_sleep" "wait_cm" {
-  create_duration = "30s"
-  depends_on      = [kubernetes_config_map.aws_auth]
-}
-
 resource "kubernetes_config_map_v1_data" "aws_auth" {
   count = var.create && var.manage_aws_auth_configmap ? 1 : 0
 
@@ -570,6 +564,6 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
 
   depends_on = [
     # Required for instances where the configmap does not exist yet to avoid race condition
-    time_sleep.wait_cm,
+    kubernetes_config_map.aws_auth,
   ]
 }

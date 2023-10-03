@@ -1,5 +1,5 @@
 output "cluster_endpoint" {
-  value = module.eks.cluster_endpoint
+  value = try(module.eks.cluster_endpoint, null)
 }
 output "cluster_certificate_authority_data" {
   value = module.eks.cluster_certificate_authority_data
@@ -7,10 +7,11 @@ output "cluster_certificate_authority_data" {
 output "cluster_name" {
   value = module.eks.cluster_name
 }
+/*
 output "token" {
   value = data.aws_eks_cluster_auth.cluster.token
-  sensitive = true
 }
+*/
 output "oidc_provider_arn" {
   value = module.eks.oidc_provider_arn
 }

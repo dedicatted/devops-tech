@@ -63,20 +63,28 @@ metadata:
   name: guestbook
   namespace: argocd
 spec:
-  project: default
-  source:
+  project: default # ArgoCD project name
+  source: 
     repoURL: https://github.com/argoproj/argocd-example-apps.git
-    targetRevision: HEAD
-    path: guestbook
+    targetRevision: HEAD # Branch name from which get the code
+    path: guestbook # Directory where is a code
   destination:
-    server: https://kubernetes.default.svc
-    namespace: guestbook
+    server: https://kubernetes.default.svc # Cluster DNS 
+    namespace: guestbook # Namespace where all manifests will be deployed 
   syncPolicy:
-    syncOptions:
-    - CreateNamespace=true
-    automated:
-      selfHeal: true
-      prune: true
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+      allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
+    syncOptions:     # Sync options which modifies sync behavior
+      - Validate=false # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+      - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+    retry:
+      limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+      backoff:
+        duration: 5s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+        factor: 2 # a factor to multiply the base duration after each failed retry
+        maxDuration: 3m # the maximum amount of time allowed for the backoff strategy
 
 ```
 
@@ -160,8 +168,50 @@ spec:
 ```
 
 
-tbd
+### Helm chart Application example
 
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: dev
+  source:
+    repoURL: 'git@github.com:Organiztion/helm-charts.git'
+    path: app
+    targetRevision: feature/new_application
+    helm: # helm settings
+      valueFiles: # File in given directory from which to get values
+        - dev-values.yaml
+      parameters: # additional parameters to override
+        - name: 'imagePullSecrets[0].name' 
+          value: pull-secret
+        - name: replicaCount
+          value: '1'
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: dev
+  syncPolicy:
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+      allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
+    syncOptions:     # Sync options which modifies sync behavior
+      - Validate=false # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+      - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+    # The retry feature is available since v1.7
+    retry:
+      limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+      backoff:
+        duration: 5s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+        factor: 2 # a factor to multiply the base duration after each failed retry
+        maxDuration: 3m # the maximum amount of time allowed for the backoff strategy
+
+```
 
 
 ## Project

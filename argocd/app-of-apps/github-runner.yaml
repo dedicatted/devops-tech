@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: github-actions-runner-operator
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: actions-runner
+  namespace: github-actions-runner-operator
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: global-secret-store
+    kind: ClusterSecretStore
+  target:
+    name: actions-runner
+    creationPolicy: Owner
+  data:
+  - secretKey: GH_TOKEN
+    remoteRef:
+      key: github_token
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: github-actions-runner-operator
+  namespace: argocd
+spec:
+  project: devops
+  destination:
+    name: ''
+    namespace: github-actions-runner-operator
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: ''
+    repoURL: 'https://evryfs.github.io/helm-charts/'
+    targetRevision: 2.8.0
+    chart: github-actions-runner-operator
+
+  syncPolicy:
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+
+    syncOptions:     # Sync options which modifies sync behavior
+    - Validate=true # enable resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+    - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+  # The retry feature is available since v1.7
+    retry:
+      limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+      backoff:
+        duration: 5s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+        factor: 2 # a factor to multiply the base duration after each failed retry
+        maxDuration: 3m # the maximum amount of time allowed for the backoff strategy
+---
+apiVersion: garo.tietoevry.com/v1alpha1
+kind: GithubActionRunner
+metadata:
+  name: github-runner-pool
+  namespace: github-actions-runner-operator
+spec:
+  # minimum running pods, required
+  minRunners: 1
+  # max number of pods, required
+  maxRunners: 6
+  # the github org, required
+  organization: diligend
+  # How often it will reconcile, optional, default 1m
+  reconciliationPeriod: 1m
+  # if runner for repo, optional
+  # repository: "theRepoName"
+  tokenRef:
+    key: GH_TOKEN
+    name: actions-runner
+  podTemplateSpec:
+    metadata:
+      annotations:
+        "prometheus.io/scrape": "true"
+        "prometheus.io/port": "3903"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: garo.tietoevry.com/pool
+                      operator: In
+                      values:
+                        - runner-pool
+      containers:
+        - name: runner
+          env:
+            - name: RUNNER_DEBUG
+              value: "true"
+            - name: DOCKER_TLS_CERTDIR
+              value: /certs
+            - name: DOCKER_HOST
+              value: tcp://localhost:2376
+            - name: DOCKER_TLS_VERIFY
+              value: "1"
+            - name: DOCKER_CERT_PATH
+              value: /certs/client
+            - name: GH_ORG
+              value: diligend
+            # this can be set if you want the runners to appear in another runner group than Default
+            #- name: ACTIONS_RUNNER_INPUT_RUNNERGROUP
+            #  value: THEGROUPNAME
+          # if runner for repo:
+          # - name: GH_REPO
+          #   value: theRepoName
+          envFrom:
+            - secretRef:
+                name: github-runner-pool-regtoken
+          # find the fixed-in-time tags at https://quay.io/repository/evryfs/github-actions-runner?tab=tags if you want to avoid pulling on a moving tag
+          # due to https://github.com/actions/runner/issues/246 the runner sw needs to be recent
+          # you can subscribe to release-feeds at https://github.com/evryfs/github-actions-runner/releases.atom
+          image: quay.io/evryfs/github-actions-runner:master
+          imagePullPolicy: Always
+          resources: {}
+          volumeMounts:
+            - mountPath: /certs
+              name: docker-certs
+            - mountPath: /home/runner/_diag
+              name: runner-diag
+            - mountPath: /home/runner/_work
+              name: runner-work
+            - mountPath: /home/runner/.m2
+              name: mvn-repo
+        - name: docker
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: /certs
+          image: docker:stable-dind
+          imagePullPolicy: Always
+          args:
+            # See linked issues from: https://github.com/evryfs/github-actions-runner-operator/issues/39
+            - --mtu=1430
+          resources: {}
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /var/lib/docker
+              name: docker-storage
+            - mountPath: /certs
+              name: docker-certs
+            - mountPath: /home/runner/_work
+              name: runner-work
+        - name: exporter
+          image: quay.io/evryfs/github-actions-runner-metrics:v0.0.3
+          ports:
+            - containerPort: 3903
+              protocol: TCP
+          volumeMounts:
+            - name: runner-diag
+              mountPath: /_diag
+              readOnly: true
+      volumes:
+        - emptyDir: {}
+          name: runner-work
+        - emptyDir: {}
+          name: runner-diag
+        - emptyDir: {}
+          name: mvn-repo
+        - emptyDir: {}
+          name: docker-storage
+        - emptyDir: {}
+          name: docker-certs

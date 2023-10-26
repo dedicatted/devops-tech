@@ -9,23 +9,43 @@ resource "random_string" "random" {
 
 resource "helm_release" "argocd" {
   name             = "argo-cd"
-  chart            = "argo-cd"
-  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"                              # Official Chart Name
+  repository       = "https://argoproj.github.io/argo-helm" # Official Chart Repo
   version          = var.chart_version
   create_namespace = true
   namespace        = "argocd"
   values = [<<EOF
+# ----------------------------
+# High Availability mode with autoscaling
+# redis-ha:
+#   enabled: true
+# controller:
+#   replicas: 1
+# server:
+#   autoscaling:
+#     enabled: true
+#     minReplicas: 2
+# repoServer:
+#   autoscaling:
+#     enabled: true
+#     minReplicas: 2
+# applicationSet:
+#   replicas: 2
+# ----------------------------
+# High Availability mode without autoscaling
+# redis-ha:
+#   enabled: true
+# controller:
+#   replicas: 1
+# server:
+#   replicas: 2
+# repoServer:
+#   replicas: 2
+# applicationSet:
+#   replicas: 2
+# ----------------------------
+
 installCRDs: ${var.argocd_helm_deploy_crds}
-#redis-ha:
-#  enabled: true
-#controller:
-#  replicas: 1
-#server:
-#  replicas: 3
-#repoServer:
-#  replicas: 3
-#applicationSet:
-#  replicaCount: 3
 configs:
   secret:
     argocdServerAdminPassword: ${bcrypt(random_string.random.result)}

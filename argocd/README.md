@@ -1,10 +1,10 @@
 ## ArgoCD 
-- open source utility
+- Open-source utility
 - continuous delivery (CD) tool for Kubernetes based on GitOps principals
 - is a part of k8s cluster; it pulls k8s manifest changes and applies them
-- checks specific Git Repo & automatically deploys from that Git Repo to k8s cluster
+- checks specific Git Repo & automatically deploys from that Git Repo to the k8s cluster, also, can deploy to multiple clusters
 - synhronize all your manifest files from Git Repo to k8s cluster
-- supports: Kubernetes YAML files; Helm Charts; Kustomize 
+- supports: Kubernetes YAML files; Helm Charts; Customize 
 
 Benefits
 1. whole k8s configuration is defined as Code in Git Repository
@@ -167,7 +167,31 @@ spec:
     └── root.yaml              # Root ArgoCD Application for Prod   
 ```
 
+### How to deploy multiple manifests from the directory in one application
+It can be used to deploy general manifests as well as ArgoCD Application definitions
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-argocd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: devops
+  source:
+      repoURL: 'git@github.com:Organization/argocd-production.git'
+      path: apps-production/
+      targetRevision: main
+      directory: # Note: it will take files from this directory and will not include folders inside 
+        exclude: deployment-test.yaml which files to exclude from deployment 
+        include: '*' # which files to include, '*' for all the files except defined in 'exclude'
+  destination:
+    server: 'https://kubernetes.default.svc'
+  syncPolicy:
+    automated: {}
 
+```
 ### Helm chart Application example
 
 ```
@@ -185,7 +209,7 @@ spec:
     path: app
     targetRevision: feature/new_application
     helm: # helm settings
-      valueFiles: # File in given directory from which to get values
+      valueFiles: # File in the given directory from which to get values
         - dev-values.yaml
       parameters: # additional parameters to override
         - name: 'imagePullSecrets[0].name' 
@@ -198,21 +222,51 @@ spec:
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
-      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in the target Kubernetes cluster and no git change is detected ( false by default ).
       allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
-    syncOptions:     # Sync options which modifies sync behavior
+    syncOptions:     # Sync options that modify sync behavior
       - Validate=false # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
-      - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+      - CreateNamespace=true # Namespace Auto-Creation ensures that the namespace specified as the application destination exists in the destination cluster.
     # The retry feature is available since v1.7
     retry:
       limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
       backoff:
-        duration: 5s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+        duration: 5s # the amount to back off. The default unit is seconds, but it could also be a duration (e.g. "2m", "1h")
         factor: 2 # a factor to multiply the base duration after each failed retry
         maxDuration: 3m # the maximum amount of time allowed for the backoff strategy
 
 ```
 
+### How to deploy files from multiple sources in one application
+
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-argocd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: apps
+  sources: # Note: Change 'source' to 'sources' and each source is the item in the list
+    - repoURL: 'git@github.com:Organization/argocd-production.git'
+      path: application/stage/
+      targetRevision: main
+      directory: # Note: it will take files from this directory and will not include folders inside 
+        exclude: deployment-test.yaml which files to exclude from deployment 
+        include: '*' # which files to include, '*' for all the files except defined in 'exclude'
+    - repoURL: 'git@github.com:Organization/argocd-production.git'
+      path: applications/dev/
+      targetRevision: main
+      directory:
+        include: '*'
+  destination:
+    server: 'https://kubernetes.default.svc'
+  syncPolicy:
+    automated: {}
+
+```
 
 ## Project
 - logical grouping of Applications

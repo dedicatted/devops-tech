@@ -3,10 +3,10 @@
 ################################################################################
 
 module "external_dns_irsa_role" {
-  source                        = "./irsa_roles"
+  source                        = "../irsa_roles"
   role_name                     = "external-dns"
   attach_external_dns_policy    = true
-  external_dns_hosted_zone_arns = [data.aws_route53_zone.zone.arn]
+  external_dns_hosted_zone_arns = [data.aws_route53_zone.this.arn]
 
   oidc_providers = {
     ex = {
@@ -28,7 +28,7 @@ resource "helm_release" "external_dns" {
 provider: aws
 aws:
   zoneType: public
-txtOwnerId: ${data.aws_route53_zone.zone.zone_id}
+txtOwnerId: ${data.aws_route53_zone.this.zone_id}
 domainFilters[0]: ${var.route53_zone_name}
 policy: sync
 serviceAccount:

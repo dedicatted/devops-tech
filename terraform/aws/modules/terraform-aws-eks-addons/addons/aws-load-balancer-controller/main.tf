@@ -2,7 +2,7 @@
 # ALB-Ingress Configuration
 ################################################################################
 module "load_balancer_controller_irsa_role" {
-  source = "./irsa_roles"
+  source = "../irsa_roles"
 
   role_name                                                       = "alb-ingress"
   attach_load_balancer_controller_policy                          = true

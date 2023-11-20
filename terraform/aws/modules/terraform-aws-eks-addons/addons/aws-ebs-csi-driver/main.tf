@@ -1,5 +1,5 @@
 module "ebs_csi_irsa_role" {
-  source                = "./irsa_roles"
+  source                = "../irsa_roles"
   role_name             = "ebs-csi"
   attach_ebs_csi_policy = true
   ebs_csi_kms_cmk_ids   = [var.kms_key_arn]

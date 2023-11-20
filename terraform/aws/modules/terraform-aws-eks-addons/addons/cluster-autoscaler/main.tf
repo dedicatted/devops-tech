@@ -1,5 +1,5 @@
 module "cluster_autoscaler_irsa_role" {
-  source                           = "./irsa_roles"
+  source                           = "../irsa_roles"
   role_name                        = "cluster-autoscaler"
   attach_cluster_autoscaler_policy = true
   cluster_autoscaler_cluster_names = [var.cluster_name]

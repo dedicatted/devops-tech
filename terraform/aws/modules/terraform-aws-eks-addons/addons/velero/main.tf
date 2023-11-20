@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "s3" {
 }
 
 module "velero_irsa_role" {
-  source                = "./irsa_roles"
+  source                = "../irsa_roles"
   role_name             = "velero"
   attach_velero_policy  = true
   velero_s3_bucket_arns = [aws_s3_bucket.s3.arn]

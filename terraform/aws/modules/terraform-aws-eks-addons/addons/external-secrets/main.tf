@@ -1,5 +1,5 @@
 module "external_secrets_irsa_role" {
-  source = "./irsa_roles"
+  source = "../irsa_roles"
 
   role_name                      = "external-secrets"
   attach_external_secrets_policy = true
@@ -14,7 +14,7 @@ module "external_secrets_irsa_role" {
 }
 
 resource "helm_release" "external_secrets" {
-  depends_on       = [module.external_secrets_irsa_role, helm_release.alb_ingress]
+  depends_on       = [module.external_secrets_irsa_role]
   repository       = "https://charts.external-secrets.io"
   name             = "external-secrets"
   chart            = "external-secrets"

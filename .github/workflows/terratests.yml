@@ -116,6 +116,8 @@ jobs:
 
           echo "oidc_provider_arn=$(terraform output oidc_provider_arn)" >> terraform.tfvars
           echo "cluster_name=$(terraform output cluster_name)" >> terraform.tfvars
+          echo "eks_cluster_endpoint=$(terraform output cluster_endpoint)" >> terraform.tfvars
+          echo "eks_cluster_certificate=$(terraform output cluster_certificate_authority_data)" >> terraform.tfvars
           cp terraform.tfvars ../terraform-aws-eks-addons/terraform.tfvars
           
           cd ../terraform-aws-eks-addons

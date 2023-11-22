@@ -62,27 +62,4 @@
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_alb_chart_version"></a> [alb\_chart\_version](#output\_alb\_chart\_version) | chart version used for alb helmchart |
-| <a name="output_alb_iam_policy"></a> [alb\_iam\_policy](#output\_alb\_iam\_policy) | IAM Policy name used in alb irsa |
-| <a name="output_alb_namespace"></a> [alb\_namespace](#output\_alb\_namespace) | Namespace where alb is installed |
-| <a name="output_alb_service_account"></a> [alb\_service\_account](#output\_alb\_service\_account) | name of alb service-account |
-| <a name="output_aws_ebs_csi_driver_chart_version"></a> [aws\_ebs\_csi\_driver\_chart\_version](#output\_aws\_ebs\_csi\_driver\_chart\_version) | chart version used for aws-ebs-csi-driver helmchart |
-| <a name="output_aws_ebs_csi_driver_iam_policy"></a> [aws\_ebs\_csi\_driver\_iam\_policy](#output\_aws\_ebs\_csi\_driver\_iam\_policy) | IAM Policy name used in aws-ebs-csi-driver irsa |
-| <a name="output_aws_ebs_csi_driver_namespace"></a> [aws\_ebs\_csi\_driver\_namespace](#output\_aws\_ebs\_csi\_driver\_namespace) | Namespace where aws-ebs-csi-driver is installed |
-| <a name="output_aws_ebs_csi_driver_service_account"></a> [aws\_ebs\_csi\_driver\_service\_account](#output\_aws\_ebs\_csi\_driver\_service\_account) | name of aws-ebs-csi-driver service-account |
-| <a name="output_cluster_autoscaler_chart_version"></a> [cluster\_autoscaler\_chart\_version](#output\_cluster\_autoscaler\_chart\_version) | chart version used for cluster-autoscaler helmchart |
-| <a name="output_cluster_autoscaler_iam_policy"></a> [cluster\_autoscaler\_iam\_policy](#output\_cluster\_autoscaler\_iam\_policy) | IAM Policy name used in cluster-autoscaler irsa |
-| <a name="output_cluster_autoscaler_namespace"></a> [cluster\_autoscaler\_namespace](#output\_cluster\_autoscaler\_namespace) | Namespace where cluster-autoscaler is installed |
-| <a name="output_cluster_autoscaler_service_account"></a> [cluster\_autoscaler\_service\_account](#output\_cluster\_autoscaler\_service\_account) | name of cluster-autoscaler service-account |
-| <a name="output_external_dns_chart_version"></a> [external\_dns\_chart\_version](#output\_external\_dns\_chart\_version) | Chart version of the external dns Helm Chart. |
-| <a name="output_external_dns_namespace"></a> [external\_dns\_namespace](#output\_external\_dns\_namespace) | The namespace where external dns is deployed. |
-| <a name="output_external_secrets_chart_version"></a> [external\_secrets\_chart\_version](#output\_external\_secrets\_chart\_version) | chart version used for external-secrets helmchart |
-| <a name="output_external_secrets_iam_policy"></a> [external\_secrets\_iam\_policy](#output\_external\_secrets\_iam\_policy) | Name of IAM Policy used in external-secrets irsa |
-| <a name="output_external_secrets_namespace"></a> [external\_secrets\_namespace](#output\_external\_secrets\_namespace) | Namespace where external-secrets is installed |
-| <a name="output_external_secrets_service_account"></a> [external\_secrets\_service\_account](#output\_external\_secrets\_service\_account) | name of external-secrets service-account |
-| <a name="output_velero_chart_version"></a> [velero\_chart\_version](#output\_velero\_chart\_version) | chart version used for velero helmchart |
-| <a name="output_velero_iam_policy"></a> [velero\_iam\_policy](#output\_velero\_iam\_policy) | IAM Policy name used in velero irsa |
-| <a name="output_velero_namespace"></a> [velero\_namespace](#output\_velero\_namespace) | Namespace where velero is installed |
-| <a name="output_velero_service_account"></a> [velero\_service\_account](#output\_velero\_service\_account) | name of velero service-account |
+No outputs.

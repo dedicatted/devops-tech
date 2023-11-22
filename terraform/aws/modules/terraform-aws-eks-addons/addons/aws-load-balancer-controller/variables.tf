@@ -10,5 +10,5 @@ variable "cluster_name" {
 variable "alb_chart_version" {
 }
 variable "region" {
-  
+
 }

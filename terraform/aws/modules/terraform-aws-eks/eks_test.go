@@ -49,8 +49,8 @@ func getCurrentUserArn() (string, error) {
 }
 
 func TestEKSAddons(t *testing.T) {
-	awsRegion := "us-east-1"
 	// Set the AWS region you want to use for testing
+	awsRegion := "us-east-1"
 	roleArn, err := getRoleArnFromAWS()
 	if err != nil {
 		fmt.Println("Error fetching role ARN:", err)
@@ -61,6 +61,8 @@ func TestEKSAddons(t *testing.T) {
 		fmt.Println("Error fetching user ARN:", err)
 		os.Exit(1)
 	}
+
+	// Configure KMS modlue options with the path to your KMS module code.
 	kmsTerraformOptions := &terraform.Options{
 		TerraformDir: "../terraform-aws-kms",
 		Vars: map[string]interface{}{
@@ -72,9 +74,13 @@ func TestEKSAddons(t *testing.T) {
 			"AWS_DEFAULT_REGION": awsRegion,
 		},
 	}
-	// Initialize and apply the VPC module
+
+	// Initialize and apply the KMS module
 	terraform.InitAndApply(t, kmsTerraformOptions)
+
 	key_arn := terraform.Output(t, kmsTerraformOptions, "key_arn")
+
+	// Configure VPC modlue options with the path to your VPC module code.
 	vpcTerraformOptions := &terraform.Options{
 		TerraformDir: "../terraform-aws-vpc",
 		Vars: map[string]interface{}{
@@ -94,9 +100,8 @@ func TestEKSAddons(t *testing.T) {
 		},
 	}
 	// Initialize and apply the VPC module
-	defer terraform.Destroy(t, vpcTerraformOptions)
-
 	terraform.InitAndApply(t, vpcTerraformOptions)
+
 	privateSubnetsString := terraform.Output(t, vpcTerraformOptions, "private_subnets")
 	vpcID := terraform.Output(t, vpcTerraformOptions, "vpc_id")
 
@@ -111,9 +116,8 @@ func TestEKSAddons(t *testing.T) {
 	for _, subnet := range privateSubnetsList {
 		privateSubnets = append(privateSubnets, subnet)
 	}
-	// Configure Terraform options with the path to your Terraform code.
+	// Configure EKS module options with the path to your EKS module code.
 	EksterraformOptions := &terraform.Options{
-		// Set the path to the Terraform code that will be tested.
 		TerraformDir: "../terraform-aws-eks",
 		Vars: map[string]interface{}{
 			"kms_key_arn": key_arn,
@@ -124,6 +128,8 @@ func TestEKSAddons(t *testing.T) {
 			"AWS_DEFAULT_REGION": awsRegion,
 		},
 	}
+
+	// Initialize and apply the EKS module
 	terraform.InitAndApply(t, EksterraformOptions)
 
 	defer terraform.Destroy(t, vpcTerraformOptions)

@@ -1,0 +1,117 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: Critical 20s
+      folder: Critical
+      interval: 20s
+      rules:
+        - uid: udp-queries-answers-imbalance
+          title: UDP Queries/Answers Imbalance
+          condition: A
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: prometheus
+              model:
+                editorMode: code
+                expr: (increase(pdns_auth_udp_answers[15m]) / increase(pdns_auth_udp_queries[15m])) < 0.8
+                instant: true
+          noDataState: OK
+          execErrState: Error
+          for: 5m
+          annotations:
+            summary: "UDP queries/answers imbalance detected on {{ $labels.instance }}."
+          labels:
+            severity: critical
+          notification_settings:
+            receiver: google-chat
+        - uid: uptime-alert
+          title: PowerDNS Server Restart Detected
+          condition: A
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: prometheus
+              model:
+                editorMode: code
+                expr: changes(pdns_auth_uptime[5m]) > 1
+                instant: true
+          noDataState: OK
+          execErrState: Error
+          for: 2m
+          annotations:
+            summary: "PowerDNS server restart detected on {{ $labels.instance }}."
+          labels:
+            severity: warning
+          notification_settings:
+            receiver: google-chat
+        - uid: latency-alert
+          title: High Latency Detected
+          condition: A
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: prometheus
+              model:
+                editorMode: code
+                expr: avg_over_time(pdns_auth_latency[5m]) > 500
+                instant: true
+          noDataState: OK
+          execErrState: Error
+          for: 2m
+          annotations:
+            summary: "High latency detected on {{ $labels.instance }}."
+          labels:
+            severity: critical
+          notification_settings:
+            receiver: google-chat
+        - uid: corrupt-packets-alert
+          title: Corrupt Packets Detected
+          condition: A
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: prometheus
+              model:
+                editorMode: code
+                expr: increase(pdns_auth_corrupt_packets[15m]) > 50
+                instant: true
+          noDataState: OK
+          execErrState: Error
+          for: 1m
+          annotations:
+            summary: "Corrupt packets detected on {{ $labels.instance }}."
+          labels:
+            severity: warning
+          notification_settings:
+            receiver: google-chat
+        - uid: packet-cache-hit-miss-alert
+          title: Packet Cache Hit/Miss Imbalance
+          condition: A
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: prometheus
+              model:
+                editorMode: code
+                expr: (increase(pdns_auth_packetcache_hit[15m]) / increase(pdns_auth_packetcache_miss[15m])) < 1
+                instant: true
+          noDataState: OK
+          execErrState: Error
+          for: 5m
+          annotations:
+            summary: "Packet cache hit/miss imbalance detected on {{ $labels.instance }}."
+          labels:
+            severity: warning
+          notification_settings:
+            receiver: google-chat

@@ -1,0 +1,390 @@
+{
+"annotations": {
+  "list": []
+},
+"editable": true,
+"gnetId": null,
+"graphTooltip": 0,
+"id": null,
+"panels": [
+  {
+    "id": 1,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 0,
+      "y": 0
+    },
+    "type": "timeseries",
+    "title": "Backend Queries",
+    "targets": [
+      {
+        "expr": "pdns_auth_backend_queries{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_backend_queries{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_backend_queries{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_backend_queries{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 2,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 12,
+      "y": 0
+    },
+    "type": "timeseries",
+    "title": "Corrupt Packets",
+    "targets": [
+      {
+        "expr": "pdns_auth_corrupt_packets{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_corrupt_packets{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_corrupt_packets{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_corrupt_packets{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 3,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 0,
+      "y": 7
+    },
+    "type": "timeseries",
+    "title": "Deferred Cache Inserts",
+    "targets": [
+      {
+        "expr": "pdns_auth_deferred_cache_inserts{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_deferred_cache_inserts{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_deferred_cache_inserts{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_deferred_cache_inserts{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 4,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 12,
+      "y": 7
+    },
+    "type": "timeseries",
+    "title": "Deferred Cache Lookups",
+    "targets": [
+      {
+        "expr": "pdns_auth_deferred_cache_lookup{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_deferred_cache_lookup{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_deferred_cache_lookup{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_deferred_cache_lookup{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 5,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 0,
+      "y": 14
+    },
+    "type": "timeseries",
+    "title": "Packet Cache Hits and Misses",
+    "targets": [
+      {
+        "expr": "pdns_auth_packetcache_hit{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_packetcache_miss{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_packetcache_hit{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_packetcache_hit{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 6,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 12,
+      "y": 14
+    },
+    "type": "timeseries",
+    "title": "Latency",
+    "targets": [
+      {
+        "expr": "pdns_auth_latency{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_latency{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_latency{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_latency{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 7,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 0,
+      "y": 21
+    },
+    "type": "timeseries",
+    "title": "Uptime",
+    "targets": [
+      {
+        "expr": "pdns_auth_uptime{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_uptime{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_uptime{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_uptime{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 8,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 12,
+      "y": 21
+    },
+    "type": "timeseries",
+    "title": "Zone Cache Size",
+    "targets": [
+      {
+        "expr": "pdns_auth_zone_cache_size{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_zone_cache_size{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_zone_cache_size{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_zone_cache_size{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "D"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  },
+  {
+    "id": 9,
+    "gridPos": {
+      "h": 7,
+      "w": 12,
+      "x": 0,
+      "y": 28
+    },
+    "type": "timeseries",
+    "title": "UDP Queries and Answers",
+    "targets": [
+      {
+        "expr": "pdns_auth_udp_queries{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "A"
+      },
+      {
+        "expr": "pdns_auth_udp_answers{instance='IP1:8081'}",
+        "legendFormat": "ns2 - IP1",
+        "refId": "B"
+      },
+      {
+        "expr": "pdns_auth_udp_queries{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "C"
+      },
+      {
+        "expr": "pdns_auth_udp_answers{instance='IP2:8081'}",
+        "legendFormat": "ns3 - IP2",
+        "refId": "D"
+      },
+      {
+        "expr": "pdns_auth_udp_queries{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "E"
+      },
+      {
+        "expr": "pdns_auth_udp_answers{instance='IP3:8081'}",
+        "legendFormat": "ns4 - IP3",
+        "refId": "F"
+      },
+      {
+        "expr": "pdns_auth_udp_queries{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "G"
+      },
+      {
+        "expr": "pdns_auth_udp_answers{instance='IP4:8081'}",
+        "legendFormat": "ns1 - IP4",
+        "refId": "H"
+      }
+    ],
+    "fieldConfig": {
+      "defaults": {},
+      "overrides": []
+    }
+  }
+],
+"schemaVersion": 30,
+"style": "dark",
+"tags": [],
+"templating": {
+  "list": [
+    {
+      "name": "server",
+      "label": "Select Server",
+      "type": "custom",
+      "datasource": null,
+      "query": "IP1:8081,IP2:8081,IP3:8081,IP4:8081",
+      "multi": true,
+      "includeAll": true,
+      "refresh": 1
+    }
+  ]
+},
+"time": {
+  "from": "now-6h",
+  "to": "now"
+},
+"timepicker": {},
+"timezone": "",
+"title": "PowerDNS Metrics",
+"uid": null,
+"version": 1
+}

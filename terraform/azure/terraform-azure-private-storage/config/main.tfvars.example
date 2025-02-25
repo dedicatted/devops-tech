@@ -1,0 +1,23 @@
+resource_names_suffix = "dev"
+dns_zone_name = "thedevops.ua"
+dns_resource_group = "devops"
+
+resource_group = {
+  name     = "devops"
+  location = "eastus2"
+}
+
+storage_settings = {
+  custom_domain_name      = "docs"  # Last level domain
+  blob_container_name     = "public" 
+  storage_account_name    = "pubstoragedevops" # Must be changed to uniq name 
+  fd_profile_name         = "PublicStorage"
+  fd_sku_name             = "Premium_AzureFrontDoor"  # Must be premium for Private Link support.
+  fd_endpoint_name        = "PublicStorage"
+  fd_origin_group_name    = "PublicStorage"
+  fd_origin_name          = "PublicStorage"
+  fd_route_name           = "PublicStorage"
+  fd_firewall_policy_name = "PublicStorage"
+  fd_security_policy_name = "PublicStorage"
+  ip_whitelist            = ["8.8.8.8"] # replace to your ip for access
+}

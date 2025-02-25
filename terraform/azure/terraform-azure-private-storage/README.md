@@ -4,11 +4,11 @@
 > [!TIP]  
 >Detailed article read on [Medium](Set_link_here)
 
-Before start you need edit `./config/main.tfvars` Just follow comments inside file.
+Before starting you need to edit `./config/main.tfvars.example` and rename it to `./config/main.tfvars` Just follow the comments inside the file.
 
 
 > [!NOTE]  
-> At next `az` commands set your data in place `<>`
+> At next `az` commands you need to set your data in place `<>`
 
 #### Logging to Azure:
 
@@ -33,11 +33,11 @@ terraform apply -var-file=config/main.tfvars
 ![image](./images/tf_apply.png)
 
 #### Action after apply:
-You need manually approve Private Endpoint in Network settings of Storage account
+You need to manually approve the Private Endpoint in the Network settings of the Storage account
 
 ![image](./images/approve_private_endpoint.png)
 
-Then you can upload file to storage: 
+Then you can upload a file to storage: 
 
 ![image](./images/upload_file.png)
 
@@ -47,4 +47,3 @@ It will successfully work with your domain:
 #### Additional Links:
 
 - [How to import DNS zone to Azure](https://learn.microsoft.com/en-us/azure/dns/dns-delegate-domain-azure-dns)
-

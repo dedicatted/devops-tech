@@ -1,0 +1,29 @@
+configs:
+  cm:
+    admin.enabled: false
+    accounts.alice: login
+    accounts.bob: login
+  secret:
+    extra:
+      accounts.alice.password: ${alice_password_bcrypt}
+      accounts.bob.password: ${bob_password_bcrypt}
+  rbac:
+    policy.csv: |
+      p, role:readonly, applications, get, */*, allow
+      p, role:readonly, applications, sync, */*, allow
+      p, role:readonly, applicationsets, get, */*, allow
+      p, role:readonly, certificates, get, *, allow
+      p, role:readonly, clusters, get, *, allow
+      p, role:readonly, repositories, get, *, allow
+      p, role:readonly, projects, get, *, allow
+      p, role:readonly, accounts, get, *, allow
+      p, role:readonly, gpgkeys, get, *, allow
+      p, role:readonly, logs, get, */*, allow
+
+      p, role:projectmanager, projects, get, *, allow
+      p, role:projectmanager, projects, create, *, allow
+      p, role:projectmanager, projects, update, *, allow
+      p, role:projectmanager, projects, delete, *, allow
+
+      g, alice, role:readonly
+      g, bob, role:projectmanager

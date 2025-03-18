@@ -159,6 +159,18 @@ variable "argocd_release_name" {
   default     = "argocd"
 }
 
+variable "argocd_repository" {
+  description = "Repository where to locate the requested chart"
+  type        = string
+  default     = "https://argoproj.github.io/argo-helm"
+}
+
+variable "argocd_chart" {
+  description = "Chart name to be installed"
+  type        = string
+  default     = "argo-cd"
+}
+
 variable "argocd_chart_version" {
   description = "Specify the exact chart version to install"
   type        = string

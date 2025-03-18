@@ -1,7 +1,7 @@
 resource "helm_release" "argocd" {
   name             = var.argocd_release_name
-  repository       = "https://argoproj.github.io/argo-helm"
-  chart            = "argo-cd"
+  repository       = var.argocd_repository
+  chart            = var.argocd_chart
   version          = var.argocd_chart_version
   create_namespace = var.argocd_create_namespace
   namespace        = var.argocd_namespace

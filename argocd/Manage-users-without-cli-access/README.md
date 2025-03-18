@@ -1,6 +1,6 @@
 # 🔰 Introduction 🔰
 
-* This folder contains `Terraform` configuration used in the ***[Argo CD article](link)*** about local users management.
+* This folder contains `Terraform` configuration used in the ***[Argo CD article](https://medium.com/@dedicatted/how-to-manage-argo-cd-local-users-without-cli-access-71fbf4d3d17a)*** about local users management.
 
 # 🧰 Prerequisites 🧰
 
@@ -87,7 +87,7 @@ kubectl port-forward svc/argocd-server -n argocd 8085:443
 
 * Navigate to `https://localhost:8085` to access `Argo CD` UI.
 
-* From this step, follow the ***[article](link)*** to understand the applied `Argo CD` configuration and how to work with it.
+* From this step, follow the ***[article](https://medium.com/@dedicatted/how-to-manage-argo-cd-local-users-without-cli-access-71fbf4d3d17a)*** to understand the applied `Argo CD` configuration and how to work with it.
 
 # 🧹 Cleanup 🧹
 

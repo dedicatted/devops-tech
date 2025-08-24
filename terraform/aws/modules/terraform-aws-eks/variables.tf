@@ -9,6 +9,7 @@ variable "vpc_id" {
   default = "vpc-0f5e6ce17bb4dd77d"
 }
 variable "private_subnets" {
+ type    = list(string)
  default = ["subnet-067b11f0152b7ce04", "subnet-0b71fc3428b80f0ed", "subnet-000b82a70cf385d4c"]
 }
 variable "cluster_version" {
